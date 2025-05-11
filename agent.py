@@ -3,6 +3,17 @@ from graph import graph
 from langchain_core.prompts import PromptTemplate
 from tools.vector import get_movie_plot
 from tools.cypher import cypher_qa
+from langchain_core.prompts import ChatPromptTemplate
+from langchain.schema import StrOutputParser
+
+chat_prompt = ChatPromptTemplate.from_messages(
+    [
+        ("system", "You are a movie expert providing information about movies."),
+        ("human", "{input}"),
+    ]
+)
+
+movie_chat = chat_prompt | llm | StrOutputParser()
 
 tools = [
     Tool.from_function(
@@ -23,17 +34,9 @@ tools = [
 ]
 
 # Create a movie chat chain
-from langchain_core.prompts import ChatPromptTemplate
-from langchain.schema import StrOutputParser
 
-chat_prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system", "You are a movie expert providing information about movies."),
-        ("human", "{input}"),
-    ]
-)
 
-movie_chat = chat_prompt | llm | StrOutputParser()
+
 # Create a set of tools
 from langchain.tools import Tool
 
